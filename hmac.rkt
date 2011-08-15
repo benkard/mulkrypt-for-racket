@@ -55,8 +55,15 @@
                              msg))
                            hashsize)))))
 
+;; According to Ironclad:
+;;
+;; CRYPTO[12]> (map nil
+;;                  (lambda (x) (format t "~x" x))
+;;                    (hmac-digest (make-hmac "" 'whirlpool)))
+;; 57D73990319055DEFA7739FF7B72406A927BBC54E8FCDC98E145FA4C36CE83
+;; A9CF165AD1E0D1925F93AC1D12B985A26044E9FB1B9CCE24301FAA76EAAB53
+;;
 #;
 (begin
   (require "whirlpool.rkt")
   (printf "~x~%" (hmac whirlpool 64 64 #"" #"")))
-
