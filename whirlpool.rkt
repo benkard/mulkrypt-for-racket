@@ -1,6 +1,7 @@
 #lang typed/racket
 ;;; Copyright 2011, Matthias Andreas Benkard.
 ;;;
+;;;-----------------------------------------------------------------------------
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Affero General Public License as published by
 ;;; the Free Software Foundation, either version 3 of the License, or
@@ -13,6 +14,14 @@
 ;;;
 ;;; You should have received a copy of the GNU Affero General Public License
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;;-----------------------------------------------------------------------------
+;;;
+;;; This is an implementation of the WHIRLPOOL cryptographic hashing function
+;;;
+;;; The implementation is a rather direct implementation based on the 2003
+;;; revised version of the original paper (“The WHIRLPOOL Hashing Function”) by
+;;; Barreto and Rijmen.  It is optimized for clarity, not performance.
+;;;
 
 (provide: [whirlpool (Bytes -> Exact-Nonnegative-Integer)])
 
