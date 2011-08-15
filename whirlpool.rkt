@@ -23,6 +23,8 @@
 ;;; It is optimized for clarity, not performance.
 ;;;
 
+(require "util.rkt")
+
 (provide: [whirlpool (Bytes -> Exact-Nonnegative-Integer)])
 
 (define-type Matrix Exact-Nonnegative-Integer)
@@ -200,15 +202,6 @@
   (for/fold: ([acc : Matrix 0])
              ([byte : Byte (in-bytes b)])
     (+ (arithmetic-shift acc 8) byte)))
-
-(define: (integer->bytes [x : Exact-Nonnegative-Integer]) : Bytes
-  (let: loop : Bytes
-        ([acc : (Listof Byte) (list)]
-         [x : Exact-Nonnegative-Integer x])
-    (if (zero? x)
-        (list->bytes acc)
-        (loop (cons (bitwise-and #xff x) acc)
-              (arithmetic-shift x -8)))))
 
 (define: (length->bytes [n : Exact-Nonnegative-Integer]) : Bytes
   (let ([b (integer->bytes n)])
