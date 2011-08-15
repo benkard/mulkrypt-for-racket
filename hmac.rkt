@@ -43,14 +43,14 @@
                     'left)])
     (hashfn (bytes-append (integer->bytes/size
                            (bitwise-xor (bytes->integer opad)
-                                        (bytes->integer key))
+                                        (bytes->integer padded-key))
                            blocksize)
                           (integer->bytes/size
                            (hashfn
                             (bytes-append
                              (integer->bytes/size
                               (bitwise-xor (bytes->integer ipad)
-                                           (bytes->integer key))
+                                           (bytes->integer padded-key))
                               blocksize)
                              msg))
                            hashsize)))))
