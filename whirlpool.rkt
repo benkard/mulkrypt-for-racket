@@ -207,7 +207,7 @@
   (let ([b (integer->bytes n)])
     (bytes-append (make-bytes (- 32 (bytes-length b)) 0) b)))
 
-(define: (pad-bytes [b : Bytes]) : Bytes
+(define: (pad-whirlpool-bytes [b : Bytes]) : Bytes
   (let* ([missingno (modulo (- 32 (remainder (bytes-length b) 64))
                             64)]
          [padding   (cons #x80 (make-list (sub1 missingno) 0))]
@@ -215,7 +215,7 @@
     (bytes-append b (list->bytes padding) len)))
 
 (define: (bytes->message [b : Bytes]) : (Listof Matrix)
-  (let: ([pb : Bytes (pad-bytes b)])
+  (let: ([pb : Bytes (pad-whirlpool-bytes b)])
     (reverse
      (for/fold: ([acc : (Listof Matrix) (list)])
                 ([i : Exact-Nonnegative-Integer

@@ -17,7 +17,13 @@
 ;;;-----------------------------------------------------------------------------
 ;;;
 
-(provide integer->bytes)
+(provide integer->bytes
+         integer->bytes/size
+         bytes->integer
+         pad-bytes
+         Justification)
+
+(define-type Justification (U 'left 'right))
 
 (define: (integer->bytes [x : Exact-Nonnegative-Integer]) : Bytes
   (let: loop : Bytes
@@ -27,3 +33,28 @@
         (list->bytes acc)
         (loop (cons (bitwise-and #xff x) acc)
               (arithmetic-shift x -8)))))
+
+(define: (integer->bytes/size [x : Exact-Nonnegative-Integer]
+                              [size : Exact-Nonnegative-Integer])
+  : Bytes
+  (pad-bytes (integer->bytes x) size #x0 'right))
+
+(define: (bytes->integer [b : Bytes]) : Exact-Nonnegative-Integer
+  (for/fold: ([n : Exact-Nonnegative-Integer 0])
+             ([byte : Byte (in-bytes b)])
+    (bitwise-ior (arithmetic-shift n 8)
+                 byte)))
+
+(define: (pad-bytes [b : Bytes]
+                    [s : Exact-Nonnegative-Integer]
+                    [fill : Byte]
+                    [justify : Justification])
+  : Bytes
+  (if (>= (bytes-length b) s)
+      b
+      (let* ([delta   (- s (bytes-length b))]
+             [padding (make-bytes delta fill)])
+        (if (eq? justify 'left)
+            (bytes-append b padding)
+            (bytes-append padding b)))))
+
