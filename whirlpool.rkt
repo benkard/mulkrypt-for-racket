@@ -16,11 +16,11 @@
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;-----------------------------------------------------------------------------
 ;;;
-;;; This is an implementation of the WHIRLPOOL cryptographic hashing function
+;;; This is an implementation of the WHIRLPOOL cryptographic hashing function.
 ;;;
-;;; The implementation is a rather direct implementation based on the 2003
-;;; revised version of the original paper (“The WHIRLPOOL Hashing Function”) by
-;;; Barreto and Rijmen.  It is optimized for clarity, not performance.
+;;; The implementation is directly based on the 2003 revised version of the
+;;; original paper (“The WHIRLPOOL Hashing Function”) by Barreto and Rijmen.
+;;; It is optimized for clarity, not performance.
 ;;;
 
 (provide: [whirlpool (Bytes -> Exact-Nonnegative-Integer)])
