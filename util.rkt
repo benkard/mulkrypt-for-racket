@@ -45,7 +45,12 @@
                               [endianness : Endianness]
                               [size       : Exact-Nonnegative-Integer])
   : Bytes
-  (pad-bytes (integer->bytes x endianness) size #x0 'right))
+  (pad-bytes (integer->bytes x endianness)
+             size
+             #x0
+             (if (eq? endianness 'big-endian)
+                 'right
+                 'left)))
 
 (define: (bytes->integer [b : Bytes]) : Exact-Nonnegative-Integer
   (for/fold: ([n : Exact-Nonnegative-Integer 0])
