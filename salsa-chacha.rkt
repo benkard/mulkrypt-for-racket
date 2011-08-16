@@ -159,7 +159,7 @@
          [s3 (list->bytes '(116 101  32 107))]
          [t0 s0]
          [t1 (list->bytes '(110 100  32  49))]
-         [t2 s2]
+         [t2 (list->bytes '( 54  45  98 121))]
          [t3 s3])
     (if (= (bytes-length k) 32)
         (let ([k0 (subbytes k 0 16)]
@@ -169,12 +169,18 @@
 
 (: salsa20 (Bytes Bytes (Sequenceof Byte) -> (Sequenceof Byte)))
 (define (salsa20 k v m)
+  (assert (= (bytes-length v) 8))
+  (assert (member (bytes-length k) '(16 32)))
   (let-values ([(next? next) (sequence-generate m)])
-    (let: ([i      : Word          0]
-           [buffer : (Listof Byte) (list)])
+    (let: ([i                : Word          0]
+           [buffer           : (Listof Byte) (list)]
+           [first-iteration? : Boolean       #t])
        (in-producer
         (λ ()
           (when (null? buffer)
+            (if first-iteration?
+                (set! first-iteration? #f)
+                (set! i (add1 i)))
             (let ([64bytes
                    (let: inner-loop : Bytes
                          ([k     : Integer       0]
