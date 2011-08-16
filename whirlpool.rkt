@@ -204,7 +204,7 @@
     (+ (arithmetic-shift acc 8) byte)))
 
 (define: (length->bytes [n : Exact-Nonnegative-Integer]) : Bytes
-  (let ([b (integer->bytes n)])
+  (let ([b (integer->bytes n 'big-endian)])
     (bytes-append (make-bytes (- 32 (bytes-length b)) 0) b)))
 
 (define: (pad-whirlpool-bytes [b : Bytes]) : Bytes

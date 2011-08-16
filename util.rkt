@@ -21,23 +21,31 @@
          integer->bytes/size
          bytes->integer
          pad-bytes
-         Justification)
+         Justification
+         Endianness
+         bytes-xor)
 
 (define-type Justification (U 'left 'right))
+(define-type Endianness    (U 'little-endian 'big-endian))
 
-(define: (integer->bytes [x : Exact-Nonnegative-Integer]) : Bytes
+(define: (integer->bytes [x          : Exact-Nonnegative-Integer]
+                         [endianness : Endianness])
+  : Bytes
   (let: loop : Bytes
         ([acc : (Listof Byte) (list)]
          [x : Exact-Nonnegative-Integer x])
     (if (zero? x)
-        (list->bytes acc)
+        (list->bytes (if (eq? endianness 'big-endian)
+                         acc
+                         (reverse acc)))
         (loop (cons (bitwise-and #xff x) acc)
               (arithmetic-shift x -8)))))
 
-(define: (integer->bytes/size [x : Exact-Nonnegative-Integer]
-                              [size : Exact-Nonnegative-Integer])
+(define: (integer->bytes/size [x          : Exact-Nonnegative-Integer]
+                              [endianness : Endianness]
+                              [size       : Exact-Nonnegative-Integer])
   : Bytes
-  (pad-bytes (integer->bytes x) size #x0 'right))
+  (pad-bytes (integer->bytes x endianness) size #x0 'right))
 
 (define: (bytes->integer [b : Bytes]) : Exact-Nonnegative-Integer
   (for/fold: ([n : Exact-Nonnegative-Integer 0])
@@ -57,4 +65,12 @@
         (if (eq? justify 'left)
             (bytes-append b padding)
             (bytes-append padding b)))))
+
+(define: (bytes-xor [a : Bytes] [b : Bytes]) : Bytes
+  (list->bytes
+   (reverse
+    (for/fold: ([acc : (Listof Byte) (list)])
+               ([x : Byte (in-bytes a)]
+                [y : Byte (in-bytes b)])
+      (cons (bitwise-xor x y) acc)))))
 

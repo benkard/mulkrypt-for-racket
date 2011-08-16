@@ -36,7 +36,7 @@
         [ipad (make-bytes blocksize #x36)]
         [padded-key
          (pad-bytes (if (> (bytes-length key) blocksize)
-                        (integer->bytes (hashfn key))
+                        (integer->bytes (hashfn key) 'big-endian)
                         key)
                     blocksize
                     #x0
@@ -44,6 +44,7 @@
     (hashfn (bytes-append (integer->bytes/size
                            (bitwise-xor (bytes->integer opad)
                                         (bytes->integer padded-key))
+                           'big-endian
                            blocksize)
                           (integer->bytes/size
                            (hashfn
@@ -51,8 +52,10 @@
                              (integer->bytes/size
                               (bitwise-xor (bytes->integer ipad)
                                            (bytes->integer padded-key))
+                              'big-endian
                               blocksize)
                              msg))
+                           'big-endian
                            hashsize)))))
 
 ;; According to Ironclad:
