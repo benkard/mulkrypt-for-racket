@@ -21,15 +21,18 @@
 
 (provide salsa20)
 
-(require/typed racket/stream
-               [empty-stream #;(All (a) (Sequenceof a))
-                             (Sequenceof Byte)])
-
 (require/typed racket
                [sequence-generate (All (a)
                                     (Sequenceof a)
                                     -> (values (-> Boolean)
-                                               (-> a)))])
+                                               (-> a)))]
+               #;[in-producer (All (a)
+                              ((-> Any)
+                               Any
+                               -> (Sequenceof a)))]
+               [in-producer ((-> (U Byte Symbol))
+                             Symbol
+                             -> (Sequenceof Byte))])
 
 (require/typed "typed-stream.rkt"
                [lazy-functional-stream-append (All (a)
@@ -167,20 +170,25 @@
 (: salsa20 (Bytes Bytes (Sequenceof Byte) -> (Sequenceof Byte)))
 (define (salsa20 k v m)
   (let-values ([(next? next) (sequence-generate m)])
-    (let: loop : (Sequenceof Byte)
-          ([i : Word 0])
-      (if (next?)
-          (let ([64bytes
-                 (let: inner-loop : Bytes
-                       ([k     : Integer       0]
-                       [bytes : (Listof Byte) (list)])
-                   (if (and (next?) (< k 64))
-                       (inner-loop (add1 k) (cons (next) bytes))
-                       (list->bytes bytes)))]
-                [i-code
-                 (integer->bytes/size i 'little-endian 8)])
-            (lazy-functional-stream-append (ann (bytes-xor 64bytes
-                                                           (salsa20k k (bytes-append v i-code)))
-                                                (Sequenceof Byte))
-                                           (λ () (loop (add1 i)))))
-          empty-stream))))
+    (let: ([i      : Word          0]
+           [buffer : (Listof Byte) (list)])
+       (in-producer
+        (λ ()
+          (when (null? buffer)
+            (let ([64bytes
+                   (let: inner-loop : Bytes
+                         ([k     : Integer       0]
+                          [bytes : (Listof Byte) (list)])
+                     (if (and (next?) (< k 64))
+                         (inner-loop (add1 k) (cons (next) bytes))
+                         (list->bytes bytes)))]
+                  [i-code
+                   (integer->bytes/size i 'little-endian 8)])
+              (set! buffer (bytes->list (bytes-xor 64bytes
+                                                   (salsa20k k (bytes-append v i-code)))))))
+          (if (null? buffer)
+              'end-of-sequence
+              (let ([byte (first buffer)])
+                (set! buffer (rest buffer))
+                byte)))
+        'end-of-sequence))))
