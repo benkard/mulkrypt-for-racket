@@ -2,7 +2,8 @@
 (require "hmac.rkt"
          "whirlpool.rkt"
          "salsa-chacha.rkt"
-         "cubehash.rkt")
+         "cubehash.rkt"
+         "threefish.rkt")
 
 (provide hmac
          whirlpool
@@ -14,4 +15,5 @@
          cubehash-256
          cubehash-384
          cubehash-512
-         cubehash-512x)
+         cubehash-512x
+         threefish)

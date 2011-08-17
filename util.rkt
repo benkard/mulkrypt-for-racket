@@ -20,6 +20,7 @@
 (provide integer->bytes
          integer->bytes/size
          bytes->integer
+         bytes->integer/le
          pad-bytes
          Justification
          Endianness
@@ -57,6 +58,13 @@
              ([byte : Byte (in-bytes b)])
     (bitwise-ior (arithmetic-shift n 8)
                  byte)))
+
+(define: (bytes->integer/le [b : Bytes]) : Exact-Nonnegative-Integer
+  (for/fold: ([n : Exact-Nonnegative-Integer 0])
+             ([byte : Byte (in-bytes b)]
+              [i    : Integer (in-naturals)])
+    (bitwise-ior (arithmetic-shift byte (* i 8))
+                 n)))
 
 (define: (pad-bytes [b : Bytes]
                     [s : Exact-Nonnegative-Integer]
