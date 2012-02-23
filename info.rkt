@@ -17,7 +17,8 @@
       (a ((href "http://cr.yp.to/snuffle.html"))
          "Salsa20")
       "."))
-(define categories '(misc))
+
+(define categories '(misc datastructures net))
 (define version "1.0")
 (define can-be-loaded-with 'all)
 (define primary-file "main.rkt")
