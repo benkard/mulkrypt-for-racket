@@ -61,8 +61,8 @@
 
 
 (define (cubehash init-rounds rounds/block block-size fin-rounds output-bits)
-  (λ: ([msg : Bytes])
-    (let*: ([state   : (Vectorof Word)
+  (λ: ([msg : Bytes])
+    (let*: ([state   : (Vectorof Word)
                      (make-vector 32 #x0)]
             [msg-pad : Bytes
                      (bytes-append msg
