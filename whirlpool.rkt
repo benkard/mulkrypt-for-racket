@@ -26,6 +26,7 @@
 (require "util.rkt")
 
 (provide: [whirlpool (Bytes -> Exact-Nonnegative-Integer)])
+(: whirlpool (Bytes -> Exact-Nonnegative-Integer))
 
 (define-type Matrix Exact-Nonnegative-Integer)
 
@@ -66,8 +67,8 @@
 
 (define: (make-matrix [proc : (Byte Byte -> Byte)]) : Matrix
   (for*/fold: ([m : Matrix 0])
-              ([i : Index (in-range 0 8)]
-               [j : Index (in-range 0 8)])
+              ([i : (U Positive-Fixnum Zero) (in-range 0 8)]
+               [j : (U Positive-Fixnum Zero) (in-range 0 8)])
     (bitwise-ior (proc (assert i byte?) (assert j byte?))
                  (arithmetic-shift m 8))))
 
@@ -91,7 +92,7 @@
 (define: (reverse-minibox [box : (Vectorof Byte)])
   : (Vectorof Byte)
   (let: ([antibox : (Vectorof Byte) (make-vector 16 0)])
-    (for: ([i : Index (in-range 0 16)])
+    (for: ([i : (U Positive-Fixnum Zero) (in-range 0 16)])
       (vector-set! antibox (vector-ref box i) (assert i byte?)))
     (vector->immutable-vector antibox)))
 
@@ -143,7 +144,7 @@
   (make-matrix
    (λ (i j)
      (for/fold: ([sum : Byte 0])
-                ([k : Index (in-range 0 8)])
+                ([k : (U Positive-Fixnum Zero) (in-range 0 8)])
        (let ([k (assert k byte?)])
          (gf2^8+ sum
                  (gf2^8* (matrix-ref m i k)

@@ -20,6 +20,7 @@
 (require "util.rkt")
 
 (provide: [threefish (Bytes Bytes Bytes (U 'encrypt 'decrypt) -> Bytes)])
+(: threefish (Bytes Bytes Bytes (U 'encrypt 'decrypt) -> Bytes))
 
 (define-type Long Exact-Nonnegative-Integer)
 

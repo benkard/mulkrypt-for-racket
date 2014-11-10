@@ -42,6 +42,19 @@
           [cubehash-512x (Bytes -> Exact-Nonnegative-Integer)]
           #;[cubemac-128   (Bytes Bytes -> Exact-Nonnegative-Integer)])
 
+(: cubehash      (Exact-Nonnegative-Integer Exact-Nonnegative-Integer
+                  Exact-Nonnegative-Integer Exact-Nonnegative-Integer
+                  Exact-Nonnegative-Integer ->
+                  Bytes -> Exact-Nonnegative-Integer))
+(: cubehash-128  (Bytes -> Exact-Nonnegative-Integer))
+(: cubehash-160  (Bytes -> Exact-Nonnegative-Integer))
+(: cubehash-224  (Bytes -> Exact-Nonnegative-Integer))
+(: cubehash-256  (Bytes -> Exact-Nonnegative-Integer))
+(: cubehash-384  (Bytes -> Exact-Nonnegative-Integer))
+(: cubehash-512  (Bytes -> Exact-Nonnegative-Integer))
+(: cubehash-512x (Bytes -> Exact-Nonnegative-Integer))
+#;(: cubemac-128   (Bytes Bytes -> Exact-Nonnegative-Integer))
+
 
 (define-type Word    Exact-Nonnegative-Integer)
 (define-type Bit     (U Zero One))

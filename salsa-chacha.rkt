@@ -133,7 +133,7 @@
 
 (: times (All (a) ((a -> a) Integer -> (a -> a))))
 (define (times fn n)
-  (for/fold ([acc (inst identity a)])
+  (for/fold ([acc : (a -> a) (inst identity a)])
             ([i   (in-range 0 n)])
     (compose fn acc)))
 

@@ -31,6 +31,13 @@
 ;;
 ;;  (hmac whirlpool 64 64 #"<secret key>" #"hello")
 ;;
+(: hmac ((Bytes -> Exact-Nonnegative-Integer)
+         Exact-Nonnegative-Integer
+         Exact-Nonnegative-Integer
+         Bytes
+         Bytes
+         ->
+         Exact-Nonnegative-Integer))
 (define (hmac hashfn blocksize hashsize key msg)
   (let ([opad (make-bytes blocksize #x5c)]
         [ipad (make-bytes blocksize #x36)]
